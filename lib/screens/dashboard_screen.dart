@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gcs_app/widgets/battery_indicator.dart';
+import 'package:gcs_app/widgets/gps_indicator.dart';
+import 'package:gcs_app/widgets/signal_indicator.dart';
 import '../controllers/dashboard_controller.dart';
-import '../widgets/status_card.dart';
 import '../widgets/armed_indicator.dart';
 import '../widgets/controls_panel.dart';
 import '../widgets/telemetry_panel.dart';
 import '../widgets/map_panel.dart';
-import '../models/status_type.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -39,47 +40,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0066CC),
-        foregroundColor: Colors.white,
+        leading: Icon(Icons.cell_tower_rounded, size: 40),
         title: const Text('GCS Dashboard'),
         actions: [
-          ArmedIndicator(isArmed: controller.armed),
-          const SizedBox(width: 16),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: ArmedIndicator(isArmed: controller.armed),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: SignalIndicator(signalStrength: controller.rssi, signalPercentage: controller.signal)
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: BatteryIndicator(batteryPercentage: controller.battery, voltage: controller.voltage)
+          ),
+          Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: GPSIndicator(gps: controller.gps),
+          ),
         ],
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(panelSpacing),
-          child: Column(
-            children: [
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  StatusCard(
-                    title: 'Battery',
-                    value: '${controller.battery}%',
-                    valueInt: controller.battery,
-                    type: StatusType.battery,
-                  ),
-                  StatusCard(
-                    title: 'GPS',
-                    value: '${controller.gps} sats',
-                    valueInt: controller.gps,
-                    type: StatusType.gps,
-                  ),
-                  StatusCard(
-                    title: 'Signal',
-                    value: '${controller.signal}%',
-                    valueInt: controller.signal,
-                    type: StatusType.signal,
-                  ),
-                ],
-              ),
-              const SizedBox(height: panelSpacing),
-              Expanded(child: _responsiveBody(width)),
-            ],
-          ),
+          child: _responsiveBody(width),
         ),
       ),
     );

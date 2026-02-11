@@ -24,23 +24,53 @@ class DashboardController extends ChangeNotifier {
   int latency = 120;
 
   void start() {
-    _timer = Timer.periodic(const Duration(seconds: 2), (_) {
-      battery = (battery + _random.nextInt(11) - 5).clamp(0, 100);
-      gps = 6 + _random.nextInt(10);
-      signal = (signal + _random.nextInt(15) - 7).clamp(0, 100);
-      armed = _random.nextBool();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (armed) {
+        // Simulated climb/descent physics
+        verticalSpeed = (_random.nextDouble() * 2 - 1).clamp(-2, 2);
+        altitude = (altitude + verticalSpeed).clamp(0, 500);
 
-      altitude += _random.nextDouble() * 4 - 2;
-      groundSpeed = (groundSpeed + _random.nextDouble() - 0.5).clamp(0, 50);
-      verticalSpeed = _random.nextDouble() * 2 - 1;
-      heading = (heading + _random.nextInt(20) - 10) % 360;
+        // Ground speed tied to activity
+        groundSpeed = (groundSpeed + (_random.nextDouble() - 0.5))
+            .clamp(0, 20);
 
-      voltage = 14.0 + _random.nextDouble();
-      current = 8 + _random.nextDouble() * 4;
-      consumed += 0.05;
+        // Battery drain proportional to current
+        current = 6 + groundSpeed * 0.4;
+        voltage = (voltage - 0.005).clamp(13.5, 16.8);
+        consumed += current * 0.0003;
+        battery = (battery - 1).clamp(0, 100);
+      }
 
-      rssi = -70 + _random.nextInt(15);
-      latency = 100 + _random.nextInt(50);
+      // GPS realistic range
+      gps = 10 + _random.nextInt(8); // 10–17 sats
+
+      // Signal affects RSSI
+
+      const int targetSignal = 88;
+
+      // Mean reversion
+      signal += ((targetSignal - signal) * 0.15).round();
+
+      // Small noise
+      signal += _random.nextInt(5) - 2;
+
+      // Rare dip
+      if (_random.nextDouble() < 0.02) {
+        signal -= 20;
+      }
+
+      // Clamp
+      signal = signal.clamp(60, 100);
+
+      // Realistic RSSI mapping
+      rssi = -90 + (signal - 60);
+
+      // Latency correlation
+      latency = (200 - signal).clamp(40, 200);
+
+
+      // Heading continuous rotation
+      heading = (heading + _random.nextInt(10)) % 360;
 
       notifyListeners();
     });
