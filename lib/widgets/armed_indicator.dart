@@ -18,9 +18,9 @@ class _ArmedIndicatorState extends State<ArmedIndicator>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 900),
       lowerBound: 0.8,
-      upperBound: 1.0,
+      upperBound: 0.9,
     );
 
     // Start animation immediately if initialized as armed

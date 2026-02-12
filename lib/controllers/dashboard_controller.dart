@@ -6,7 +6,7 @@ class DashboardController extends ChangeNotifier {
   final Random _random = Random();
   late Timer _timer;
 
-  int battery = 75;
+  int battery = 95;
   int gps = 10;
   int signal = 80;
   bool armed = false;
@@ -41,11 +41,16 @@ class DashboardController extends ChangeNotifier {
         battery = (battery - 1).clamp(0, 100);
       }
 
+      if (battery < 10) {
+        battery = 100;
+      }
+
       // GPS realistic range
       gps = 10 + _random.nextInt(8); // 10–17 sats
 
-      // Signal affects RSSI
+      armed = _random.nextBool();
 
+      // Signal affects RSSI
       const int targetSignal = 88;
 
       // Mean reversion

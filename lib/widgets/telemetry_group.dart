@@ -4,11 +4,7 @@ class TelemetryGroup extends StatelessWidget {
   final String title;
   final List<TelemetryItem> items;
 
-  const TelemetryGroup({
-    super.key,
-    required this.title,
-    required this.items,
-  });
+  const TelemetryGroup({super.key, required this.title, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -31,29 +27,23 @@ class TelemetryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              softWrap: true,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: const TextStyle(fontSize: 10, color: Colors.grey),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Monospace',
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 1,
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              softWrap: true,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

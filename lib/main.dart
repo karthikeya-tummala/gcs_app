@@ -14,23 +14,32 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ground Control Station',
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
+        brightness: Brightness.dark,
 
-        colorScheme: const ColorScheme.light(
-          surface: Color(0xFFF7F5F2), // subtle cream over white
+        scaffoldBackgroundColor: const Color(0xFF0D1117),
+
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blueAccent,
+          brightness: Brightness.dark,
+          surface: const Color(0xFF161B22), // Lighter slate for panels
         ),
 
-        cardColor: const Color(0xFFF7F5F2),
+        textTheme: const TextTheme(
+          titleMedium: TextStyle(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.1,
+          ),
+          labelSmall: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
 
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.black,
           elevation: 2,
           foregroundColor: Colors.white,
           shadowColor: Colors.black12,
-        ),
-
-        bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: Color(0xFFF7F5F2),
         ),
       ),
       home: const DashboardScreen(),
